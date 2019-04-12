@@ -1,0 +1,54 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class SequenceTable {
+	
+	Map<String, FrequencyMap> seqTab = new HashMap <String, FrequencyMap>();
+	
+	/*
+	 * Makes a new frequency map and adds it to the table.
+	 * 
+	 * @param sequence	The sequence that the map will be mapped to
+	 * @param myChar	The character that follows the sequence
+	 */
+	public void addToTable(String sequence, Character myChar) {
+		 FrequencyMap temp = new FrequencyMap(myChar);
+		 seqTab.put(sequence, temp);
+	}
+	
+	/*
+	 * A simple get method, for retrieving a frequency map from the sequence table.
+	 * 
+	 * @param 	segment		The string segment to be used
+	 * @return	The corresponding frequency map
+	 */
+	public FrequencyMap get(String segment) {
+		return seqTab.get(segment);
+	}
+	
+	/*
+	 * A method for determining whether a sequence table contains a segment of text
+	 * 
+	 * @param	segment		The segment to be checked
+	 * @return	Whether or not the segment is contained
+	 */
+	public boolean notIn(String segment) {
+		boolean isIn = true;
+		for (String key: seqTab.keySet()) {
+			if (key.contentEquals(segment)) {
+				isIn = false;
+			}
+		}
+		return isIn;
+			
+	}
+
+	public String toString() {
+		String myString = null;
+		for (String key: seqTab.keySet()) {
+			myString = myString + key + " - (" + seqTab.get(key).toString() + ") ";
+		}
+		return myString;
+		
+	}
+}

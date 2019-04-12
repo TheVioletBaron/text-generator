@@ -1,0 +1,69 @@
+import java.util.Random;
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;;
+
+public class WordGen {
+	
+	/**
+	* Read the contents of a file into a string. If the file does not
+	* exist or cannot not be read for any reason, returns null.
+	* @param filename The name of the file to read.
+	* @return The contents of the file as a string, or null.
+	*/
+	
+	/*
+	 * Reads a file into a string
+	 * 
+	 * @param filename	The name of the file to be read
+	 * @return The string the file was read into
+	 */
+	private static String readFileAsString(String filename) {
+		try {
+				return new String(Files.readAllBytes(Paths.get(filename)));
+			} catch (IOException e) {
+				return null;
+			}
+	}
+	
+	public static void main(String[] args) {
+		Random generator = new Random();
+		SequenceTable seqTab = new SequenceTable();
+		String myText = "";
+		final int OUTPUT_LENGTH = 5000;
+		
+		// Takes user input
+        Scanner sc = new Scanner(System.in);
+		System.out.println("Please enter a filename: ");
+		String desiredFile = sc.nextLine();
+		System.out.println("Please enter a k value: ");
+		int k = sc.nextInt();
+		
+		// Reads the file
+		myText = readFileAsString(desiredFile);
+
+		// Creates our frequency map and sequence table
+		for (int i = 0; i < myText.length() - k; i++) {
+			if (seqTab.notIn(myText.substring(i,i+k))) {
+				seqTab.addToTable(myText.substring(i, i+k), myText.charAt(i+k));
+			} else {
+				seqTab.get(myText.substring(i, i+k)).addToMap(myText.charAt(i+k));
+			}
+			// Tells us what percentage of the text has been read, since it can take a while
+			System.out.println((float)i/myText.length()*100);
+		}
+		
+		// Creates our semirandom output
+		String outPut = myText.substring(0,k);
+		for (int i = k; i < OUTPUT_LENGTH + k; i++) {
+			if (!seqTab.notIn(outPut.substring(i - k, i))) {
+				outPut += seqTab.get(outPut.substring(i-k, i)).randomAdd();
+			} else {
+				outPut += myText.substring(generator.nextInt(myText.length()));
+			}
+		}
+		System.out.println(outPut);
+	}
+	
+}

@@ -1,0 +1,73 @@
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Map;
+
+public class FrequencyMap {
+	
+	public Map<Character, Integer> myMap;
+	public int randMax;
+	Random generator = new Random();
+	
+	public FrequencyMap(Character myChar) {
+		myMap = new HashMap<Character, Integer>();
+		myMap.put(myChar, 1);
+		randMax = 1;
+	}
+	
+	/*
+	 * Checks whether a character is in the frequency map
+	 * 
+	 * @param myChar	The character to be checked
+	 * @return	Whether the character is contained
+	 */
+	private boolean notIn(char myChar) {
+		boolean isIn = true;
+		for (char key: myMap.keySet()) {
+			if (key == myChar) {
+				isIn = false;
+			}
+		}
+		return isIn;
+				
+	}
+	
+	/*
+	 * Adds a new character to the map
+	 * 
+	 * @param myChar	The character to be added
+	 */
+	public void addToMap(char myChar) {
+		if (notIn(myChar)) {
+			myMap.put(myChar, 1);
+			randMax = 1;
+		} else {
+			myMap.put(myChar, myMap.get(myChar) + 1);
+			randMax += 1;
+		}
+	}
+	
+	
+	/*
+	 * Randomly chooses a character from the map, based on their frequencies
+	 * 
+	 * @return The character that has been chosen
+	 */
+	public char randomAdd() {
+		int charTarg = generator.nextInt(randMax);
+		for (char key: myMap.keySet()) {
+			charTarg -= myMap.get(key);
+			if (charTarg <= 0) {
+				return key;
+			}
+		}
+		return 'a';
+	}
+	
+	public String toString() {
+		String myString = "";
+		for (char key: myMap.keySet()) {
+			myString = myString + key + ": " + myMap.get(key) + " ";
+		}
+		return myString;
+	}
+}
